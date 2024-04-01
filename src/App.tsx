@@ -5,10 +5,13 @@ import poster from './assets/poster.png';
 function App() {
 
   const [videoUrl, setVideoUrl] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const [videoDuration , setVideoDuration] = useState(0);
   const [videoCurrentTime , setVideoCurrentTime] = useState(0);
   const [videoBufferedTime , setVideoBufferedTime] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
+  // Variable to track whether fetch operation is in progress
+  let fetchInProgress = false;
 
 
   const url = 'https://mirror.clarkson.edu/blender/demo/movies/BBB/bbb_sunflower_1080p_30fps_normal.mp4';
@@ -34,20 +37,40 @@ function App() {
 
 
   function getVideoUrl(){
-    return new Promise<string>((resolve)=>{
-      setTimeout(() => resolve(url), 1000);
+    return new Promise<string>((resolve, reject)=>{
+      const delay:number = Math.floor(Math.random()*10000);
+      // Check if random number is less than 2000 (20% chance)
+      console.log(delay);
+      if (delay < 2000) {
+        reject('ERROR');
+      }
+      setTimeout(() => resolve(url), delay);
     })
   }
 
   const handleClick = async () => {
-    const url = await getVideoUrl();
-    setVideoUrl(url);
+    if (fetchInProgress) {
+      return;
+    }
+    console.log
+    // Set fetchInProgress to true
+    fetchInProgress = true;
+    try {
+      const url = await getVideoUrl();
+      setVideoUrl(url);
+    }catch(err){
+      setErrorMsg(err as string);
+    } finally {
+      // Reset fetchInProgress to false after completion
+      fetchInProgress = false;
+    }
   }
   return (
     <div className='videoPlayer'>
       
       <video ref={videoRef} width="600" height="240" controls src={videoUrl} poster={poster}/>
       <button className='videoButton' onClick={handleClick}>Load Url</button>
+      {errorMsg ? <h2 className='errorMessage'>{errorMsg}</h2> : null}
       <div className='stateIndications'>
         <div className='duration'></div>
         <div className='buffered' style={{width:((videoBufferedTime/videoDuration)*100+ '%')}}></div>
