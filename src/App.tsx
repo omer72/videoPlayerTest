@@ -40,7 +40,6 @@ function App() {
     return new Promise<string>((resolve, reject)=>{
       const delay:number = Math.floor(Math.random()*10000);
       // Check if random number is less than 2000 (20% chance)
-      console.log(delay);
       if (delay < 2000) {
         reject('ERROR');
       }
@@ -52,7 +51,6 @@ function App() {
     if (fetchInProgress) {
       return;
     }
-    console.log
     // Set fetchInProgress to true
     fetchInProgress = true;
     try {
