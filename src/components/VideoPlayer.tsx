@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 import poster from '../assets/poster.png';
 
+interface TimeRange{
+  start:number;
+  end:number
+}
+
 function VideoPlayer() {
   const [videoUrl, setVideoUrl] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [videoDuration, setVideoDuration] = useState(0);
   const [videoCurrentTime, setVideoCurrentTime] = useState(0);
-  const [videoBufferedTime, setVideoBufferedTime] = useState(0);
+  const [videoBufferedTime, setVideoBufferedTime] = useState<TimeRange[]>([]);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   let fetchInProgress = useRef<boolean>(false); // Using useRef for mutable state
@@ -21,8 +26,16 @@ function VideoPlayer() {
       const handleTimeUpdate = () => setVideoCurrentTime(video.currentTime);
       const handleProgress = () => {
         const bufferedSize = video.buffered.length;
-        if (bufferedSize > 0) {
-          setVideoBufferedTime(video.buffered.end(bufferedSize - 1));
+        if (videoBufferedTime.length <  bufferedSize) {
+          videoBufferedTime.push({
+            start: video.buffered.start(bufferedSize - 1),
+            end: video.buffered.end(bufferedSize - 1)
+          })
+        }else{
+          videoBufferedTime[bufferedSize - 1].start = video.buffered.start(bufferedSize - 1);
+          videoBufferedTime[bufferedSize - 1].end = video.buffered.end(bufferedSize - 1);
+          
+
         }
       };
 
@@ -68,7 +81,12 @@ function VideoPlayer() {
       {errorMsg && <h2 className='errorMessage'>{errorMsg}</h2>}
       <div className='stateIndications'>
         <div className='duration'></div>
-        <div className='buffered' style={{ width: `${(videoBufferedTime / videoDuration) * 100}%` }}></div>
+        {videoBufferedTime.map((buffredTime)=> (
+           <div className='buffered' style={{
+            left:`${(buffredTime.start / videoDuration) * 100}%`,
+             width: `${((buffredTime.end - buffredTime.start) / videoDuration) * 100}%` }}></div>
+
+        ))}
         <div className='played' style={{ width: `${(videoCurrentTime / videoDuration) * 100}%` }}></div>
       </div>
     </div>
