@@ -26,17 +26,17 @@ function VideoPlayer() {
       const handleTimeUpdate = () => setVideoCurrentTime(video.currentTime);
       const handleProgress = () => {
         const bufferedSize = video.buffered.length;
-        if (videoBufferedTime.length <  bufferedSize) {
-          videoBufferedTime.push({
+        let videoBufferedTimeClone = videoBufferedTime;
+        if (videoBufferedTimeClone.length <  bufferedSize) {
+          videoBufferedTimeClone.push({
             start: video.buffered.start(bufferedSize - 1),
             end: video.buffered.end(bufferedSize - 1)
           })
         }else{
-          videoBufferedTime[bufferedSize - 1].start = video.buffered.start(bufferedSize - 1);
-          videoBufferedTime[bufferedSize - 1].end = video.buffered.end(bufferedSize - 1);
-          
-
+          videoBufferedTimeClone[bufferedSize - 1].start = video.buffered.start(bufferedSize - 1);
+          videoBufferedTimeClone[bufferedSize - 1].end = video.buffered.end(bufferedSize - 1);
         }
+        setVideoBufferedTime(videoBufferedTimeClone);
       };
 
       video.addEventListener("loadedmetadata", handleLoadedMetadata);
@@ -55,7 +55,7 @@ function VideoPlayer() {
   const getVideoUrl = async () => {
     return new Promise<string>((resolve, reject) => {
       const delay = 3 * 1000;
-      timerRef.current = window.setTimeout(() => resolve(url), delay);
+      timerRef.current = setTimeout(() => resolve(url), delay);
     });
   };
 
