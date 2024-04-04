@@ -82,3 +82,10 @@
 .errorMessage{
   color: red;
 }
+
+.wrapperButton {
+  background-color: #008CBA;
+  width: 200px;
+  color: white;
+  margin: 5px;
+}

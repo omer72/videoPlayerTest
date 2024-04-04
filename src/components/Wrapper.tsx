@@ -10,8 +10,8 @@ export default function Wrapper({children}:Props  ) {
 
   return (
     <div>
-      <button onClick={()=>setShowChild(true)}>With Video</button>
-      <button onClick={()=>setShowChild(false)}>Without Video</button>
+      <button className='wrapperButton' onClick={()=>setShowChild(true)}>With Video</button>
+      <button className='wrapperButton' onClick={()=>setShowChild(false)}>Without Video</button>
       {showChild? children : null}
     </div>
   )
