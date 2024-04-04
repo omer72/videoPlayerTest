@@ -54,7 +54,7 @@ function VideoPlayer() {
 
   const getVideoUrl = async () => {
     return new Promise<string>((resolve, reject) => {
-      const delay = 3 * 1000;
+      const delay = 30 * 1000;
       timerRef.current = setTimeout(() => resolve(url), delay);
     });
   };
