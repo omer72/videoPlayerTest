@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
 import './App.css'
-import poster from './assets/poster.png';
+import VideoPlayer from './components/VideoPlayer';
+import Wrapper from './components/Wrapper';
 
 interface TimeRange{
   start:number;
@@ -82,6 +82,7 @@ function App() {
       </div>
     </div>
   )
+ 
 }
 
 export default App
