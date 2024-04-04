@@ -51,7 +51,15 @@ function App() {
         video.removeEventListener("progress", handleProgress);
       };
     }
-  },[])
+  },[videoBufferedTime])
+
+  useEffect(() => {
+    return () => {
+      // Cleanup function to reset fetchInProgress if component unmounts
+      fetchInProgress.current = false;
+    };
+  }, []);
+
 
 
   function getVideoUrl(){
